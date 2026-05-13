@@ -1,0 +1,77 @@
+#ifndef __AD9833_H_
+#define __AD9833_H_
+
+#include "stm32h7xx_hal.h"
+#include "spi.h"
+/*
+	DDS1
+*/
+#define AD98331_FSYNC_Pin       	GPIO_PIN_0
+#define AD98331_FSYNC_GPIO_Port 	GPIOD
+#define AD98331_FSYNC_SET()     HAL_GPIO_WritePin(AD98331_FSYNC_GPIO_Port, AD98331_FSYNC_Pin, GPIO_PIN_SET)
+#define AD98331_FSYNC_CLR()     HAL_GPIO_WritePin(AD98331_FSYNC_GPIO_Port, AD98331_FSYNC_Pin, GPIO_PIN_RESET)
+/*
+	DDS2
+*/
+#define AD98332_FSYNC_Pin       	GPIO_PIN_15
+#define AD98332_FSYNC_GPIO_Port 	GPIOE
+#define AD98332_FSYNC_SET()     HAL_GPIO_WritePin(AD98332_FSYNC_GPIO_Port, AD98332_FSYNC_Pin, GPIO_PIN_SET)
+#define AD98332_FSYNC_CLR()     HAL_GPIO_WritePin(AD98332_FSYNC_GPIO_Port, AD98332_FSYNC_Pin, GPIO_PIN_RESET)
+
+/* 寄存器 */
+
+#define AD9833_REG_CMD		(0 << 14)
+#define AD9833_REG_FREQ0	(1 << 14)
+#define AD9833_REG_FREQ1	(2 << 14)
+#define AD9833_REG_PHASE0	(6 << 13)
+#define AD9833_REG_PHASE1	(7 << 13)
+
+/* 命令控制位 */
+
+#define AD9833_B28				(1 << 13)
+#define AD9833_HLB				(1 << 12)
+#define AD9833_FSEL0			(0 << 11)
+#define AD9833_FSEL1			(1 << 11)
+#define AD9833_PSEL0			(0 << 10)
+#define AD9833_PSEL1			(1 << 10)
+#define AD9833_PIN_SW			(1 << 9)
+#define AD9833_RESET			(1 << 8)
+#define AD9833_SLEEP1			(1 << 7)
+#define AD9833_SLEEP12		(1 << 6)
+#define AD9833_OPBITEN		(1 << 5)
+#define AD9833_SIGN_PIB		(1 << 4)
+#define AD9833_DIV2				(1 << 3)
+#define AD9833_MODE				(1 << 1)
+
+#define AD9833_OUT_SINUS		((0 << 5) | (0 << 1) | (0 << 3))//正弦波 
+#define AD9833_OUT_TRIANGLE	((0 << 5) | (1 << 1) | (0 << 3))//三角波
+#define AD9833_OUT_MSB			((1 << 5) | (0 << 1) | (1 << 3)) //方波
+#define AD9833_OUT_MSB2			((1 << 5) | (0 << 1) | (0 << 3))
+
+/*
+	DDS1
+*/
+static void AD98331_SPI_Write(uint16_t data);
+void AD98331_SetRegisterValue(unsigned short regValue);	//把值写入寄存器
+void AD98331_Init(void);		//初始化寄存器
+void AD98331_Reset(void);		//置位AD9833的复位位
+void AD98331_ClearReset(void);//清除AD9833的复位位
+void AD98331_SetFrequency(unsigned short reg, float fout, unsigned short type);//写入频率寄存器
+void AD98331_SetFrequencyQuick(float fout, unsigned short type);//设置频率及波形类型
+void AD98331_SetPhase(unsigned short reg, unsigned short val);//写入相位寄存器
+void AD98331_Setup(unsigned short freq, unsigned short phase, unsigned short type);	//选择频率、相位和波形类型
+
+/*
+	DDS2
+*/
+static void AD98332_SPI_Write(uint16_t data);
+void AD98332_SetRegisterValue(unsigned short regValue);	//把值写入寄存器
+void AD98332_Init(void);		//初始化寄存器
+void AD98332_Reset(void);		//置位AD9833的复位位
+void AD98332_ClearReset(void);//清除AD9833的复位位
+void AD98332_SetFrequency(unsigned short reg, float fout, unsigned short type);//写入频率寄存器
+void AD98332_SetFrequencyQuick(float fout, unsigned short type);//设置频率及波形类型
+void AD98332_SetPhase(unsigned short reg, unsigned short val);//写入相位寄存器
+void AD98332_Setup(unsigned short freq, unsigned short phase, unsigned short type);	//选择频率、相位和波形类型
+
+#endif
